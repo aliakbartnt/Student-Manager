@@ -2,12 +2,50 @@
 """
 student manager basic - aliakbartnt
 """
-# import
+
 import os
 import sys
 import json
+import yaml
 
-# ====== main dict ======
+# ====== language select ======
+def choose_lang():
+    while True:
+        lang = input("Select language / انتخاب زبان (en/fa): ").strip().lower()
+        if lang in ('en', 'fa'):
+            return lang
+        print("لطفاً en یا fa رو انتخاب کن.")
+
+LANG = choose_lang()
+
+# ====== load language class ======
+class MsgLoader:
+    def __init__(self, lang):
+        self.lang = lang
+        self.messages = self._get_msgs()
+    
+    def _get_msgs(self):
+        base = os.path.dirname(os.path.abspath(__file__))
+        fname = 'message_en.yml' if self.lang == 'en' else 'message_fa.yml'
+        path = os.path.join(base, 'messages', fname)
+        try:
+            with open(path, 'r', encoding='utf-8') as f:
+                return yaml.safe_load(f) or {}
+        except Exception as e:
+            print(f"خطا تو خوندن فایل پیام: {e}")
+            sys.exit(1)
+    
+    def get(self, key, **kwargs):
+        msg = self.messages.get(key, key)
+        if kwargs:
+            msg = msg.format(**kwargs)
+        if self.lang == 'fa':
+            msg = '\u202B' + msg + '\u202C'
+        return msg
+
+MSG = MsgLoader(LANG)
+
+# ====== Main dict ======
 students = {}  # {lower_id: {'id': orig, 'name': name, 'grades': {lower_cid: grade}}}
 courses = {}   # {lower_cid: {'id': orig, 'name': name}}
 
@@ -15,7 +53,7 @@ student_counter = 1
 course_counter = 1
 id_mode = 'manual'  # 'manual' or 'auto'
 
-# ====== function helper ======
+# ====== Function helper ======
 def generate_student_id():
     global student_counter
     new_id = f"S{student_counter}"
@@ -43,203 +81,203 @@ def course_exists(cid):
 def safe_input(prompt):
     inp = input(prompt).strip()
     if inp.lower() == 'exit':
-        print("بازگشت به منوی اصلی...")
+        print(MSG.get('return_to_menu'))
         return None
     return inp
 
 # ====== list ======
 def list_students():
     if not students:
-        print("❌ هیچ دانشجویی ثبت نشده است.")
+        print(MSG.get('no_students_registered'))
         return False
-    print("\n--- لیست دانشجویان ---")
+    print(MSG.get('list_students_title'))
     for data in students.values():
-        print(f"  {data['id']}: {data['name']}")
-    print("-------------------------\n")
+        print(MSG.get('list_students_line', id=data['id'], name=data['name']))
+    print(MSG.get('list_students_footer'))
     return True
 
 def list_courses():
     if not courses:
-        print("❌ هیچ درسی ثبت نشده است.")
+        print(MSG.get('no_courses'))
         return False
-    print("\n--- لیست دروس ---")
+    print(MSG.get('list_courses_title'))
     for data in courses.values():
-        print(f"  {data['id']}: {data['name']}")
-    print("------------------------\n")
+        print(MSG.get('list_courses_line', id=data['id'], name=data['name']))
+    print(MSG.get('list_courses_footer'))
     return True
 
-# ====== main ======
+# ====== Main ======
 def add_student():
     global id_mode
     if id_mode == 'manual':
-        sid = safe_input("شناسه دانشجو را وارد کنید (یا 'exit' برای لغو): ")
+        sid = safe_input(MSG.get('student_id_prompt'))
         if sid is None:
             return
         if not sid:
-            print("❌ شناسه نمی‌تواند خالی باشد.")
+            print(MSG.get('student_id_empty'))
             return
         if student_exists(sid):
-            print(f"❌ دانشجویی با شناسه '{sid}' از قبل وجود دارد.")
+            print(MSG.get('student_id_exists', id=sid))
             return
     else:
         sid = None
     
-    name = safe_input("نام دانشجو را وارد کنید (یا 'exit' برای لغو): ")
+    name = safe_input(MSG.get('student_name_prompt'))
     if name is None:
         return
     if not name:
-        print("❌ نام نمی‌تواند خالی باشد.")
+        print(MSG.get('name_empty'))
         return
     
     if id_mode == 'auto':
         sid = generate_student_id()
-        print(f"✅ شناسه دانشجو تولید شد: {sid}")
+        print(MSG.get('student_id_generated', id=sid))
     
     students[sid.lower()] = {'id': sid, 'name': name, 'grades': {}}
-    print(f"✅ دانشجو با شناسه '{sid}' و نام '{name}' اضافه شد.")
+    print(MSG.get('student_added', id=sid, name=name))
 
 def add_course():
     global id_mode
     if id_mode == 'manual':
-        cid = safe_input("شناسه درس را وارد کنید (یا 'exit' برای لغو): ")
+        cid = safe_input(MSG.get('course_id_prompt'))
         if cid is None:
             return
         if not cid:
-            print("❌ شناسه نمی‌تواند خالی باشد.")
+            print(MSG.get('course_id_empty'))
             return
         if course_exists(cid):
-            print(f"❌ درسی با شناسه '{cid}' از قبل وجود دارد.")
+            print(MSG.get('course_id_exists', id=cid))
             return
     else:
         cid = None
     
-    name = safe_input("نام درس را وارد کنید (یا 'exit' برای لغو): ")
+    name = safe_input(MSG.get('course_name_prompt'))
     if name is None:
         return
     if not name:
-        print("❌ نام نمی‌تواند خالی باشد.")
+        print(MSG.get('name_empty'))
         return
     
     if id_mode == 'auto':
         cid = generate_course_id()
-        print(f"✅ شناسه درس تولید شد: {cid}")
+        print(MSG.get('course_id_generated', id=cid))
     
     courses[cid.lower()] = {'id': cid, 'name': name}
-    print(f"✅ درس با شناسه '{cid}' و نام '{name}' اضافه شد.")
+    print(MSG.get('course_added', id=cid, name=name))
 
 def set_grade():
     if not list_students():
-        print("❌ امکان ثبت نمره وجود ندارد زیرا هیچ دانشجویی وجود ندارد.")
+        print(MSG.get('no_students'))
         return
-    sid = safe_input("شناسه دانشجو را از لیست بالا وارد کنید (یا 'exit' برای لغو): ")
+    sid = safe_input(MSG.get('student_id_list_prompt'))
     if sid is None:
         return
     st = get_student(sid)
     if not st:
-        print(f"❌ دانشجویی با شناسه '{sid}' یافت نشد.")
+        print(MSG.get('student_not_found', id=sid))
         return
-    print(f"✅ دانشجوی انتخاب‌شده: {st['name']}")
+    print(MSG.get('selected_student', name=st['name']))
     
     if not list_courses():
-        print("❌ امکان ثبت نمره وجود ندارد زیرا هیچ درسی وجود ندارد.")
+        print(MSG.get('no_courses'))
         return
-    cid = safe_input("شناسه درس را از لیست بالا وارد کنید (یا 'exit' برای لغو): ")
+    cid = safe_input(MSG.get('course_id_list_prompt'))
     if cid is None:
         return
     cs = get_course(cid)
     if not cs:
-        print(f"❌ درسی با شناسه '{cid}' یافت نشد.")
+        print(MSG.get('course_not_found', id=cid))
         return
-    print(f"✅ درس انتخاب‌شده: {cs['name']}")
+    print(MSG.get('selected_course', name=cs['name']))
     
-    gr = safe_input("نمره را وارد کنید (عدد) (یا 'exit' برای لغو): ")
+    gr = safe_input(MSG.get('grade_prompt'))
     if gr is None:
         return
     try:
         grade = float(gr)
     except:
-        print("❌ نمره باید یک عدد باشد.")
+        print(MSG.get('grade_invalid'))
         return
     
     st['grades'][cid.lower()] = grade
-    print(f"✅ نمره {grade} برای دانشجو '{st['name']}' در درس '{cs['name']}' ثبت شد.")
+    print(MSG.get('grade_recorded', grade=grade, student=st['name'], course=cs['name']))
 
 def edit_student():
     if not list_students():
         return
-    sid = safe_input("شناسه دانشجو را برای ویرایش وارد کنید (یا 'exit' برای لغو): ")
+    sid = safe_input(MSG.get('edit_student_id_prompt'))
     if sid is None:
         return
     st = get_student(sid)
     if not st:
-        print(f"❌ دانشجویی با شناسه '{sid}' یافت نشد.")
+        print(MSG.get('student_not_found', id=sid))
         return
-    print(f"✅ دانشجوی انتخاب‌شده: {st['name']}")
+    print(MSG.get('selected_student', name=st['name']))
     
-    new_name = safe_input("نام جدید را وارد کنید (یا 'exit' برای لغو): ")
+    new_name = safe_input(MSG.get('edit_student_name_prompt'))
     if new_name is None:
         return
     if not new_name:
-        print("❌ نام نمی‌تواند خالی باشد.")
+        print(MSG.get('name_empty'))
         return
     st['name'] = new_name
-    print(f"✅ نام دانشجو با شناسه '{st['id']}' به '{new_name}' تغییر یافت.")
+    print(MSG.get('student_renamed', id=st['id'], name=new_name))
 
 def edit_course():
     if not list_courses():
         return
-    cid = safe_input("شناسه درس را برای ویرایش وارد کنید (یا 'exit' برای لغو): ")
+    cid = safe_input(MSG.get('edit_course_id_prompt'))
     if cid is None:
         return
     cs = get_course(cid)
     if not cs:
-        print(f"❌ درسی با شناسه '{cid}' یافت نشد.")
+        print(MSG.get('course_not_found', id=cid))
         return
-    print(f"✅ درس انتخاب‌شده: {cs['name']}")
+    print(MSG.get('selected_course', name=cs['name']))
     
-    new_name = safe_input("نام جدید درس را وارد کنید (یا 'exit' برای لغو): ")
+    new_name = safe_input(MSG.get('edit_course_name_prompt'))
     if new_name is None:
         return
     if not new_name:
-        print("❌ نام نمی‌تواند خالی باشد.")
+        print(MSG.get('name_empty'))
         return
     cs['name'] = new_name
-    print(f"✅ نام درس با شناسه '{cs['id']}' به '{new_name}' تغییر یافت.")
+    print(MSG.get('course_renamed', id=cs['id'], name=new_name))
 
 def delete_student():
     if not list_students():
         return
-    sid = safe_input("شناسه دانشجو را برای حذف وارد کنید (یا 'exit' برای لغو): ")
+    sid = safe_input(MSG.get('delete_student_id_prompt'))
     if sid is None:
         return
     st = get_student(sid)
     if not st:
-        print(f"❌ دانشجویی با شناسه '{sid}' یافت نشد.")
+        print(MSG.get('student_not_found', id=sid))
         return
-    print(f"✅ دانشجوی انتخاب‌شده: {st['name']}")
+    print(MSG.get('selected_student', name=st['name']))
     
-    confirm = safe_input(f"آیا از حذف دانشجو '{st['name']}' مطمئن هستید؟ (y/n) (یا 'exit' برای لغو): ")
+    confirm = safe_input(MSG.get('delete_student_confirm', name=st['name']))
     if confirm is None:
         return
     if confirm.lower() == 'y':
         del students[sid.lower()]
-        print(f"✅ دانشجو با شناسه '{st['id']}' حذف شد.")
+        print(MSG.get('student_deleted', id=st['id']))
     else:
-        print("❌ عملیات لغو شد.")
+        print(MSG.get('delete_cancelled'))
 
 def delete_course():
     if not list_courses():
         return
-    cid = safe_input("شناسه درس را برای حذف وارد کنید (یا 'exit' برای لغو): ")
+    cid = safe_input(MSG.get('delete_course_id_prompt'))
     if cid is None:
         return
     cs = get_course(cid)
     if not cs:
-        print(f"❌ درسی با شناسه '{cid}' یافت نشد.")
+        print(MSG.get('course_not_found', id=cid))
         return
-    print(f"✅ درس انتخاب‌شده: {cs['name']}")
+    print(MSG.get('selected_course', name=cs['name']))
     
-    confirm = safe_input(f"آیا از حذف درس '{cs['name']}' و تمام نمرات مربوطه مطمئن هستید؟ (y/n) (یا 'exit' برای لغو): ")
+    confirm = safe_input(MSG.get('delete_course_confirm', name=cs['name']))
     if confirm is None:
         return
     if confirm.lower() == 'y':
@@ -248,96 +286,83 @@ def delete_course():
         for st in students.values():
             if lower in st['grades']:
                 del st['grades'][lower]
-        print(f"✅ درس با شناسه '{cs['id']}' و تمام نمرات مربوطه حذف شد.")
+        print(MSG.get('course_deleted', id=cs['id']))
     else:
-        print("❌ عملیات لغو شد.")
+        print(MSG.get('delete_cancelled'))
 
 def show_student():
     if not list_students():
         return
-    sid = safe_input("شناسه دانشجو را وارد کنید (یا 'exit' برای لغو): ")
+    sid = safe_input(MSG.get('show_student_id_prompt'))
     if sid is None:
         return
     st = get_student(sid)
     if not st:
-        print(f"❌ دانشجویی با شناسه '{sid}' یافت نشد.")
+        print(MSG.get('student_not_found', id=sid))
         return
-    print(f"✅ دانشجوی انتخاب‌شده: {st['name']}")
+    print(MSG.get('selected_student', name=st['name']))
     
-    print("\n📋 اطلاعات دانشجو:")
-    print(f"شناسه: {st['id']}")
-    print(f"نام: {st['name']}")
+    print(MSG.get('show_student_info_title'))
+    print(MSG.get('show_student_id', id=st['id']))
+    print(MSG.get('show_student_name', name=st['name']))
     if st['grades']:
-        print("نمرات:")
+        print(MSG.get('show_student_grades_title'))
         for cid_low, grade in st['grades'].items():
             cs = courses.get(cid_low)
             cid_show = cs['id'] if cs else cid_low
             cname_show = cs['name'] if cs else "نامشخص"
-            print(f"  {cid_show} ({cname_show}): {grade}")
+            print(MSG.get('show_student_grade_line', course_id=cid_show, course_name=cname_show, grade=grade))
     else:
-        print("⚠️ هیچ نمره‌ای ثبت نشده است.")
+        print(MSG.get('show_student_no_grades'))
     print()
 
 def show_all():
     if not students:
-        print("❌ هیچ دانشجویی ثبت نشده است.")
+        print(MSG.get('no_students_registered'))
         return
-    print("\n--- همه دانشجویان ---")
+    print(MSG.get('show_all_title'))
     for st in students.values():
-        print(f"شناسه: {st['id']}, نام: {st['name']}")
+        print(MSG.get('show_all_student_line', id=st['id'], name=st['name']))
         if st['grades']:
-            print("  نمرات:")
+            print(MSG.get('show_all_grades_title'))
             for cid_low, grade in st['grades'].items():
                 cs = courses.get(cid_low)
                 cid_show = cs['id'] if cs else cid_low
                 cname_show = cs['name'] if cs else "نامشخص"
-                print(f"    {cid_show} ({cname_show}): {grade}")
+                print(MSG.get('show_all_grade_line', course_id=cid_show, course_name=cname_show, grade=grade))
         else:
-            print("  (هیچ نمره‌ای ثبت نشده)")
-    print("---------------------\n")
+            print(MSG.get('show_all_no_grades'))
+    print(MSG.get('show_all_footer'))
 
 def show_menu():
-    print("""
-===== منو =====
-۱. افزودن دانشجو
-۲. افزودن درس
-۳. ثبت نمره
-۴. ویرایش دانشجو
-۵. ویرایش درس
-۶. حذف دانشجو
-۷. حذف درس
-۸. نمایش دانشجو
-۹. نمایش همه دانشجویان
-۰. خروج
-===============
-""")
+    print(MSG.get('menu'))
 
 # ====== Main func ======
 def main():
     global id_mode
-    print("به سیستم مدیریت نمرات دانشجویان خوش آمدید.")
+    print(MSG.get('welcome'))
     
-    # Choice mode 
+    # Id Gen Choice mode 
     while True:
-        ch = input("آیا می‌خواهید شناسه‌ها را دستی وارد کنید یا خودکار تولید شوند؟ (m/a): ").strip().lower()
+        ch = input(MSG.get('id_mode_prompt')).strip().lower()
         if ch in ('m', 'manual'):
             id_mode = 'manual'
-            print("✅ حالت شناسه به حالت دستی تنظیم شد.")
+            print(MSG.get('id_mode_manual'))
             break
         elif ch in ('a', 'auto'):
             id_mode = 'auto'
-            print("✅ حالت شناسه به حالت خودکار تنظیم شد.")
+            print(MSG.get('id_mode_auto'))
             break
         else:
-            print("❌ ورودی نامعتبر. لطفاً 'm' برای دستی یا 'a' برای خودکار وارد کنید.")
+            print(MSG.get('id_mode_invalid'))
     
     show_menu()
     
     while True:
         try:
-            choice = input("\nشماره مورد نظر را وارد کنید: ").strip()
+            choice = input(MSG.get('menu_choice_prompt')).strip()
             if choice == '0':
-                print("خروج از برنامه. خدانگهدار!")
+                print(MSG.get('exit_program'))
                 break
             elif choice == '1':
                 add_student()
@@ -358,12 +383,12 @@ def main():
             elif choice == '9':
                 show_all()
             else:
-                print("❌ انتخاب نامعتبر. لطفاً عددی بین ۰ تا ۹ وارد کنید.")
+                print(MSG.get('invalid_choice'))
             
             if choice != '0':
                 show_menu()
         except KeyboardInterrupt:
-            print("\nعملیات متوقف شد. در حال خروج...")
+            print(MSG.get('interrupted'))
             break
 
 if __name__ == '__main__':

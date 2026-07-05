@@ -1,0 +1,7 @@
+__pycache__/
+*.pyc
+Storage/
+data.json
+data_backup.json
+*.log
+.DS_Store
