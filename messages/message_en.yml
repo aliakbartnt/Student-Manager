@@ -1,4 +1,4 @@
-# messages/message_en.yml - English messages
+# English messages
 welcome: "Welcome to the Student Grade Management System."
 id_mode_prompt: "Do you want to enter IDs manually or auto-generate? (m/a): "
 id_mode_manual: "✅ ID mode set to MANUAL entry."
@@ -16,11 +16,14 @@ menu: |
   7. Delete Course
   8. Show Student
   9. Show All Students
+  10. Search Student by Name
+  11. Sort Students by Average
+  12. Delete All Data
   0. Exit
   ================
 
 menu_choice_prompt: "\nEnter your choice (number): "
-invalid_choice: "❌ Invalid choice. Please enter a number from 0 to 9."
+invalid_choice: "❌ Invalid choice. Please enter a number from 0 to 12."
 exit_program: "Exiting program. Goodbye!"
 interrupted: "\nOperation interrupted. Exiting..."
 return_to_menu: "Returning to main menu..."
@@ -103,3 +106,24 @@ list_courses_footer: "------------------------\n"
 # Selected messages
 selected_student: "✅ Selected student: {name}"
 selected_course: "✅ Selected course: {name}"
+
+# Search by Name
+search_name_prompt: "Enter student name to search (or 'exit' to cancel): "
+search_name_empty: "❌ Search term cannot be empty."
+search_no_result: "❌ No student found with name containing '{name}'."
+search_result_title: "=== Search Results ({count} found) ==="
+search_result_line: "ID: {id}, Name: {name}, Average: {avg:.2f}"
+
+# Sort by Average
+sort_order_prompt: "Sort ascending or descending? (a for ascending, d for descending) (or 'exit' to cancel): "
+sort_order_invalid: "❌ Invalid input. Please enter 'a' or 'd'."
+sort_result_title: "=== Students Sorted by Average ({order}) ==="
+sort_descending: "Descending (highest first)"
+sort_ascending: "Ascending (lowest first)"
+sort_result_line: "ID: {id}, Name: {name}, Average: {avg:.2f}"
+
+# Delete All
+delete_all_prompt: "❌ Are you sure you want to DELETE ALL data? This action cannot be undone! (y/n) (or 'exit' to cancel): "
+delete_all_confirm: "⚠️ CONFIRM: Delete ALL students, courses, and grades? (y/n) (or 'exit' to cancel): "
+delete_all_success: "✅ All data has been deleted successfully."
+delete_all_cancelled: "❌ Delete all operation cancelled."

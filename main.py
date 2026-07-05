@@ -1,6 +1,6 @@
-
 """
-student manager basic - aliakbartnt
+student manager - aliakbartnt
+
 """
 
 import os
@@ -53,6 +53,10 @@ student_counter = 1
 course_counter = 1
 id_mode = 'manual'  # 'manual' or 'auto'
 
+# ====== Storage paths ======
+STORAGE_DIR = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'Storage')
+DATA_FILE = os.path.join(STORAGE_DIR, 'data.json')
+
 # ====== Function helper ======
 def generate_student_id():
     global student_counter
@@ -84,6 +88,61 @@ def safe_input(prompt):
         print(MSG.get('return_to_menu'))
         return None
     return inp
+
+def calc_average(student_data):
+    """calculate avg"""
+    grades = student_data.get('grades', {}).values()
+    if not grades:
+        return 0.0
+    return sum(grades) / len(grades)
+
+# ====== Save & Load functions  ======
+def ensure_storage_dir():
+    """fail folder storage"""
+    try:
+        os.makedirs(STORAGE_DIR, exist_ok=True)
+    except Exception as e:
+        print(f"❌ خطا تو ساخت پوشه Storage: {e}")
+
+def save_to_file():
+    """save data Json"""
+    try:
+        data = {
+            'students': students,
+            'courses': courses,
+            'student_counter': student_counter,
+            'course_counter': course_counter,
+        }
+        with open(DATA_FILE, 'w', encoding='utf-8') as f:
+            json.dump(data, f, ensure_ascii=False, indent=2)
+    except Exception as e:
+        print(f"❌ خطا تو ذخیره: {e}")
+        # fallback
+        fallback = os.path.join(os.getcwd(), 'data_backup.json')
+        try:
+            with open(fallback, 'w', encoding='utf-8') as f:
+                json.dump(data, f, ensure_ascii=False, indent=2)
+            print(f"✅ داده‌ها به‌عنوان پشتیبان تو {fallback} ذخیره شدن.")
+        except:
+            pass
+
+def load_from_file():
+    """load Json"""
+    global students, courses, student_counter, course_counter
+    if os.path.exists(DATA_FILE):
+        try:
+            with open(DATA_FILE, 'r', encoding='utf-8') as f:
+                content = f.read().strip()
+                if not content:
+                    return
+                data = json.loads(content)
+            students = data.get('students', {})
+            courses = data.get('courses', {})
+            student_counter = data.get('student_counter', 1)
+            course_counter = data.get('course_counter', 1)
+            print("✅ داده‌ها با موفقیت بارگذاری شدند.")
+        except Exception as e:
+            print(f"⚠️ خطا تو بارگذاری: {e}")
 
 # ====== list ======
 def list_students():
@@ -134,6 +193,7 @@ def add_student():
         print(MSG.get('student_id_generated', id=sid))
     
     students[sid.lower()] = {'id': sid, 'name': name, 'grades': {}}
+    save_to_file()
     print(MSG.get('student_added', id=sid, name=name))
 
 def add_course():
@@ -163,6 +223,7 @@ def add_course():
         print(MSG.get('course_id_generated', id=cid))
     
     courses[cid.lower()] = {'id': cid, 'name': name}
+    save_to_file()
     print(MSG.get('course_added', id=cid, name=name))
 
 def set_grade():
@@ -200,6 +261,7 @@ def set_grade():
         return
     
     st['grades'][cid.lower()] = grade
+    save_to_file()
     print(MSG.get('grade_recorded', grade=grade, student=st['name'], course=cs['name']))
 
 def edit_student():
@@ -221,6 +283,7 @@ def edit_student():
         print(MSG.get('name_empty'))
         return
     st['name'] = new_name
+    save_to_file()
     print(MSG.get('student_renamed', id=st['id'], name=new_name))
 
 def edit_course():
@@ -242,6 +305,7 @@ def edit_course():
         print(MSG.get('name_empty'))
         return
     cs['name'] = new_name
+    save_to_file()
     print(MSG.get('course_renamed', id=cs['id'], name=new_name))
 
 def delete_student():
@@ -261,6 +325,7 @@ def delete_student():
         return
     if confirm.lower() == 'y':
         del students[sid.lower()]
+        save_to_file()
         print(MSG.get('student_deleted', id=st['id']))
     else:
         print(MSG.get('delete_cancelled'))
@@ -286,6 +351,7 @@ def delete_course():
         for st in students.values():
             if lower in st['grades']:
                 del st['grades'][lower]
+        save_to_file()
         print(MSG.get('course_deleted', id=cs['id']))
     else:
         print(MSG.get('delete_cancelled'))
@@ -334,12 +400,101 @@ def show_all():
             print(MSG.get('show_all_no_grades'))
     print(MSG.get('show_all_footer'))
 
+# ====== Search by name ======
+def search_student_by_name():
+    if not students:
+        print(MSG.get('no_students_registered'))
+        return
+    
+    term = safe_input(MSG.get('search_name_prompt'))
+    if term is None:
+        return
+    if not term:
+        print(MSG.get('search_name_empty'))
+        return
+    
+    term_lower = term.lower()
+    found = []
+    for data in students.values():
+        if term_lower in data['name'].lower():
+            found.append(data)
+    
+    if not found:
+        print(MSG.get('search_no_result', name=term))
+        return
+    
+    print(MSG.get('search_result_title', count=len(found)))
+    for data in found:
+        avg = calc_average(data)
+        print(MSG.get('search_result_line', id=data['id'], name=data['name'], avg=avg))
+    print()
+
+# ====== Sort by average  ======
+def sort_students_by_average():
+    if not students:
+        print(MSG.get('no_students_registered'))
+        return
+    
+    order = safe_input(MSG.get('sort_order_prompt'))
+    if order is None:
+        return
+    if order.lower() not in ('d', 'desc', 'a', 'asc'):
+        print(MSG.get('sort_order_invalid'))
+        return
+    
+    student_list = []
+    for data in students.values():
+        avg = calc_average(data)
+        student_list.append((data, avg))
+    
+    if order.lower() in ('d', 'desc'):
+        student_list.sort(key=lambda x: x[1], reverse=True)
+        sort_label = MSG.get('sort_descending')
+    else:
+        student_list.sort(key=lambda x: x[1])
+        sort_label = MSG.get('sort_ascending')
+    
+    print(MSG.get('sort_result_title', order=sort_label))
+    for data, avg in student_list:
+        print(MSG.get('sort_result_line', id=data['id'], name=data['name'], avg=avg))
+    print()
+
+# ====== Delete all data  ======
+def delete_all_data():
+    confirm1 = safe_input(MSG.get('delete_all_prompt'))
+    if confirm1 is None:
+        return
+    if confirm1.lower() != 'y':
+        print(MSG.get('delete_all_cancelled'))
+        return
+    
+    confirm2 = safe_input(MSG.get('delete_all_confirm'))
+    if confirm2 is None:
+        return
+    if confirm2.lower() != 'y':
+        print(MSG.get('delete_all_cancelled'))
+        return
+    
+    global students, courses, student_counter, course_counter
+    students.clear()
+    courses.clear()
+    student_counter = 1
+    course_counter = 1
+    save_to_file()
+    print(MSG.get('delete_all_success'))
+
+# ====== menu ======
 def show_menu():
     print(MSG.get('menu'))
 
 # ====== Main func ======
 def main():
     global id_mode
+    
+    # load data file
+    ensure_storage_dir()
+    load_from_file()
+    
     print(MSG.get('welcome'))
     
     # Id Gen Choice mode 
@@ -382,6 +537,12 @@ def main():
                 show_student()
             elif choice == '9':
                 show_all()
+            elif choice == '10':
+                search_student_by_name()
+            elif choice == '11':
+                sort_students_by_average()
+            elif choice == '12':
+                delete_all_data()
             else:
                 print(MSG.get('invalid_choice'))
             
