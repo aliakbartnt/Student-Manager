@@ -1,1 +1,105 @@
+# messages/message_fa.yml - پیام‌های فارسی
+welcome: "به سیستم مدیریت نمرات دانشجویان خوش آمدید."
+id_mode_prompt: "آیا می‌خواهید شناسه‌ها را دستی وارد کنید یا خودکار تولید شوند؟ (m/a): "
+id_mode_manual: "✅ حالت شناسه به حالت دستی تنظیم شد."
+id_mode_auto: "✅ حالت شناسه به حالت خودکار تنظیم شد."
+id_mode_invalid: "❌ ورودی نامعتبر. لطفاً 'm' برای دستی یا 'a' برای خودکار وارد کنید."
 
+menu: |
+  ===== منو =====
+  ۱. افزودن دانشجو
+  ۲. افزودن درس
+  ۳. ثبت نمره
+  ۴. ویرایش دانشجو
+  ۵. ویرایش درس
+  ۶. حذف دانشجو
+  ۷. حذف درس
+  ۸. نمایش دانشجو
+  ۹. نمایش همه دانشجویان
+  ۰. خروج
+  ================
+
+menu_choice_prompt: "\nشماره مورد نظر را وارد کنید: "
+invalid_choice: "❌ انتخاب نامعتبر. لطفاً عددی بین ۰ تا ۹ وارد کنید."
+exit_program: "خروج از برنامه. خدانگهدار!"
+interrupted: "\nعملیات متوقف شد. در حال خروج..."
+return_to_menu: "بازگشت به منوی اصلی..."
+
+# Student
+student_id_prompt: "شناسه دانشجو را وارد کنید (یا 'exit' برای لغو): "
+student_name_prompt: "نام دانشجو را وارد کنید (یا 'exit' برای لغو): "
+student_id_exists: "❌ دانشجویی با شناسه '{id}' از قبل وجود دارد."
+student_id_empty: "❌ شناسه نمی‌تواند خالی باشد."
+name_empty: "❌ نام نمی‌تواند خالی باشد."
+student_added: "✅ دانشجو با شناسه '{id}' و نام '{name}' اضافه شد."
+student_id_generated: "✅ شناسه دانشجو تولید شد: {id}"
+
+# Course
+course_id_prompt: "شناسه درس را وارد کنید (یا 'exit' برای لغو): "
+course_name_prompt: "نام درس را وارد کنید (یا 'exit' برای لغو): "
+course_id_exists: "❌ درسی با شناسه '{id}' از قبل وجود دارد."
+course_id_empty: "❌ شناسه نمی‌تواند خالی باشد."
+course_added: "✅ درس با شناسه '{id}' و نام '{name}' اضافه شد."
+course_id_generated: "✅ شناسه درس تولید شد: {id}"
+
+# Set grade
+no_students: "❌ امکان ثبت نمره وجود ندارد زیرا هیچ دانشجویی وجود ندارد."
+no_courses: "❌ امکان ثبت نمره وجود ندارد زیرا هیچ درسی وجود ندارد."
+student_id_list_prompt: "شناسه دانشجو را از لیست بالا وارد کنید (یا 'exit' برای لغو): "
+student_not_found: "❌ دانشجویی با شناسه '{id}' یافت نشد."
+course_id_list_prompt: "شناسه درس را از لیست بالا وارد کنید (یا 'exit' برای لغو): "
+course_not_found: "❌ درسی با شناسه '{id}' یافت نشد."
+grade_prompt: "نمره را وارد کنید (عدد) (یا 'exit' برای لغو): "
+grade_invalid: "❌ نمره باید یک عدد باشد."
+grade_recorded: "✅ نمره {grade} برای دانشجو '{student}' در درس '{course}' ثبت شد."
+
+# Edit student
+edit_student_id_prompt: "شناسه دانشجو را برای ویرایش وارد کنید (یا 'exit' برای لغو): "
+edit_student_name_prompt: "نام جدید را وارد کنید (یا 'exit' برای لغو): "
+student_renamed: "✅ نام دانشجو با شناسه '{id}' به '{name}' تغییر یافت."
+
+# Edit course
+edit_course_id_prompt: "شناسه درس را برای ویرایش وارد کنید (یا 'exit' برای لغو): "
+edit_course_name_prompt: "نام جدید درس را وارد کنید (یا 'exit' برای لغو): "
+course_renamed: "✅ نام درس با شناسه '{id}' به '{name}' تغییر یافت."
+
+# Delete student
+delete_student_id_prompt: "شناسه دانشجو را برای حذف وارد کنید (یا 'exit' برای لغو): "
+delete_student_confirm: "آیا از حذف دانشجو '{name}' مطمئن هستید؟ (y/n) (یا 'exit' برای لغو): "
+student_deleted: "✅ دانشجو با شناسه '{id}' حذف شد."
+delete_cancelled: "❌ عملیات لغو شد."
+
+# Delete course
+delete_course_id_prompt: "شناسه درس را برای حذف وارد کنید (یا 'exit' برای لغو): "
+delete_course_confirm: "آیا از حذف درس '{name}' و تمام نمرات مربوطه مطمئن هستید؟ (y/n) (یا 'exit' برای لغو): "
+course_deleted: "✅ درس با شناسه '{id}' و تمام نمرات مربوطه حذف شد."
+
+# Show student
+show_student_id_prompt: "شناسه دانشجو را وارد کنید (یا 'exit' برای لغو): "
+show_student_info_title: "\n📋 اطلاعات دانشجو:"
+show_student_id: "شناسه: {id}"
+show_student_name: "نام: {name}"
+show_student_grades_title: "نمرات:"
+show_student_no_grades: "⚠️ هیچ نمره‌ای ثبت نشده است."
+show_student_grade_line: "  {course_id} ({course_name}): {grade}"
+
+# Show all
+show_all_title: "\n--- همه دانشجویان ---"
+show_all_student_line: "شناسه: {id}, نام: {name}"
+show_all_grades_title: "  نمرات:"
+show_all_no_grades: "  (هیچ نمره‌ای ثبت نشده)"
+show_all_grade_line: "    {course_id} ({course_name}): {grade}"
+show_all_footer: "---------------------\n"
+no_students_registered: "❌ هیچ دانشجویی ثبت نشده است."
+
+# Lists
+list_students_title: "\n--- لیست دانشجویان ---"
+list_students_line: "  {id}: {name}"
+list_students_footer: "-------------------------\n"
+list_courses_title: "\n--- لیست دروس ---"
+list_courses_line: "  {id}: {name}"
+list_courses_footer: "------------------------\n"
+
+# Selected messages
+selected_student: "✅ دانشجوی انتخاب‌شده: {name}"
+selected_course: "✅ درس انتخاب‌شده: {name}"

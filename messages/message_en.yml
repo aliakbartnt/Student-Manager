@@ -1,1 +1,105 @@
-test
+# messages/message_en.yml - English messages
+welcome: "Welcome to the Student Grade Management System."
+id_mode_prompt: "Do you want to enter IDs manually or auto-generate? (m/a): "
+id_mode_manual: "✅ ID mode set to MANUAL entry."
+id_mode_auto: "✅ ID mode set to AUTO-GENERATE."
+id_mode_invalid: "❌ Invalid input. Please enter 'm' for manual or 'a' for auto."
+
+menu: |
+  ===== MENU =====
+  1. Add Student
+  2. Add Course
+  3. Set Grade
+  4. Edit Student
+  5. Edit Course
+  6. Delete Student
+  7. Delete Course
+  8. Show Student
+  9. Show All Students
+  0. Exit
+  ================
+
+menu_choice_prompt: "\nEnter your choice (number): "
+invalid_choice: "❌ Invalid choice. Please enter a number from 0 to 9."
+exit_program: "Exiting program. Goodbye!"
+interrupted: "\nOperation interrupted. Exiting..."
+return_to_menu: "Returning to main menu..."
+
+# Student
+student_id_prompt: "Enter student ID (or 'exit' to cancel): "
+student_name_prompt: "Enter student name (or 'exit' to cancel): "
+student_id_exists: "❌ Student with ID '{id}' already exists."
+student_id_empty: "❌ ID cannot be empty."
+name_empty: "❌ Name cannot be empty."
+student_added: "✅ Student with ID '{id}' and name '{name}' added."
+student_id_generated: "✅ Generated student ID: {id}"
+
+# Course
+course_id_prompt: "Enter course ID (or 'exit' to cancel): "
+course_name_prompt: "Enter course name (or 'exit' to cancel): "
+course_id_exists: "❌ Course with ID '{id}' already exists."
+course_id_empty: "❌ ID cannot be empty."
+course_added: "✅ Course with ID '{id}' and name '{name}' added."
+course_id_generated: "✅ Generated course ID: {id}"
+
+# Set grade
+no_students: "❌ Cannot set grade because no students exist."
+no_courses: "❌ Cannot set grade because no courses exist."
+student_id_list_prompt: "Enter student ID from the list above (or 'exit' to cancel): "
+student_not_found: "❌ Student with ID '{id}' not found."
+course_id_list_prompt: "Enter course ID from the list above (or 'exit' to cancel): "
+course_not_found: "❌ Course with ID '{id}' not found."
+grade_prompt: "Enter grade (number) (or 'exit' to cancel): "
+grade_invalid: "❌ Grade must be a number."
+grade_recorded: "✅ Grade {grade} for student '{student}' in course '{course}' recorded."
+
+# Edit student
+edit_student_id_prompt: "Enter student ID to edit (or 'exit' to cancel): "
+edit_student_name_prompt: "Enter new name (or 'exit' to cancel): "
+student_renamed: "✅ Student with ID '{id}' renamed to '{name}'."
+
+# Edit course
+edit_course_id_prompt: "Enter course ID to edit (or 'exit' to cancel): "
+edit_course_name_prompt: "Enter new course name (or 'exit' to cancel): "
+course_renamed: "✅ Course with ID '{id}' renamed to '{name}'."
+
+# Delete student
+delete_student_id_prompt: "Enter student ID to delete (or 'exit' to cancel): "
+delete_student_confirm: "Are you sure you want to delete student '{name}'? (y/n) (or 'exit' to cancel): "
+student_deleted: "✅ Student with ID '{id}' deleted."
+delete_cancelled: "❌ Operation cancelled."
+
+# Delete course
+delete_course_id_prompt: "Enter course ID to delete (or 'exit' to cancel): "
+delete_course_confirm: "Are you sure you want to delete course '{name}' and all its grades? (y/n) (or 'exit' to cancel): "
+course_deleted: "✅ Course with ID '{id}' and all associated grades deleted."
+
+# Show student
+show_student_id_prompt: "Enter student ID (or 'exit' to cancel): "
+show_student_info_title: "\n📋 Student Information:"
+show_student_id: "ID: {id}"
+show_student_name: "Name: {name}"
+show_student_grades_title: "Grades:"
+show_student_no_grades: "⚠️ No grades recorded."
+show_student_grade_line: "  {course_id} ({course_name}): {grade}"
+
+# Show all
+show_all_title: "\n--- All Students ---"
+show_all_student_line: "ID: {id}, Name: {name}"
+show_all_grades_title: "  Grades:"
+show_all_no_grades: "  (No grades recorded)"
+show_all_grade_line: "    {course_id} ({course_name}): {grade}"
+show_all_footer: "---------------------\n"
+no_students_registered: "❌ No students registered."
+
+# Lists
+list_students_title: "\n--- List of Students ---"
+list_students_line: "  {id}: {name}"
+list_students_footer: "-------------------------\n"
+list_courses_title: "\n--- List of Courses ---"
+list_courses_line: "  {id}: {name}"
+list_courses_footer: "------------------------\n"
+
+# Selected messages
+selected_student: "✅ Selected student: {name}"
+selected_course: "✅ Selected course: {name}"
