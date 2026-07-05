@@ -1,9 +1,14 @@
-#  پیام‌های فارسی
+# پیام‌های فارسی
 welcome: "به سیستم مدیریت نمرات دانشجویان خوش آمدید."
 id_mode_prompt: "آیا می‌خواهید شناسه‌ها را دستی وارد کنید یا خودکار تولید شوند؟ (m/a): "
 id_mode_manual: "✅ حالت شناسه به حالت دستی تنظیم شد."
 id_mode_auto: "✅ حالت شناسه به حالت خودکار تنظیم شد."
 id_mode_invalid: "❌ ورودی نامعتبر. لطفاً 'm' برای دستی یا 'a' برای خودکار وارد کنید."
+
+mode_prompt: "آیا می‌خواهید داده‌ها را مدیریت کنید یا فقط گزارش مشاهده کنید؟ (m برای مدیریت، s برای گزارش): "
+mode_manage: "✅ وارد شدن به حالت مدیریت."
+mode_summary: "✅ نمایش گزارش خلاصه."
+mode_invalid: "❌ لطفاً 'm' یا 's' را وارد کنید."
 
 menu: |
   ===== منو =====
@@ -127,3 +132,33 @@ delete_all_prompt: "❌ آیا مطمئن هستید که می‌خواهید ت
 delete_all_confirm: "⚠️ تأیید نهایی: همه دانشجویان، دروس و نمرات حذف شوند؟ (y/n) (یا 'exit' برای لغو): "
 delete_all_success: "✅ تمام داده‌ها با موفقیت حذف شدند."
 delete_all_cancelled: "❌ عملیات حذف همه داده‌ها لغو شد."
+
+# Summary Report
+summary_title: "========== گزارش خلاصه =========="
+summary_students_count: "تعداد کل دانشجویان: {count}"
+summary_courses_count: "تعداد کل دروس: {count}"
+summary_student_header: "دانشجو: {name} (شناسه: {id})"
+summary_student_grade_line: "  - {course}: {grade}"
+summary_student_avg: "  میانگین: {avg:.2f}"
+summary_student_no_grades: "  (هیچ نمره‌ای ثبت نشده)"
+summary_course_detail: "درس: {name} (شناسه: {id}) - تعداد دانشجویان دارای نمره: {count}"
+summary_no_data: "هیچ داده‌ای موجود نیست."
+summary_end: "====================================="
+# Version Check
+version_mismatch_warning: "⚠️ مغایرت نسخه شناسایی شد!"
+version_mismatch_detail: "نسخه فایل: {file_ver}\nنسخه برنامه: {app_ver}\n\nاین ممکن است باعث مشکلات سازگاری با داده‌های شما شود."
+version_mismatch_confirm: "آیا می‌خواهید با احتیاط ادامه دهید؟ (y/n): "
+version_mismatch_continue: "ادامه با احتیاط. لطفاً از داده‌های خود بکاپ بگیرید."
+version_mismatch_abort: "عملیات توسط کاربر لغو شد."
+version_mismatch_invalid: "ورودی نامعتبر. لطفاً 'y' یا 'n' را وارد کنید."
+
+# Backup
+backup_no_data: "ℹ️ هیچ فایل داده‌ای برای بکاپ یافت نشد."
+backup_success: "✅ بکاپ با موفقیت ایجاد شد: {path}"
+backup_error: "❌ خطا در ایجاد بکاپ: {error}"
+
+# Exit Backup
+exit_backup_prompt: "آیا می‌خواهید قبل از خروج یک نسخه بکاپ بگیرید؟ (y/n): "
+exit_backup_creating: "در حال ایجاد بکاپ..."
+exit_backup_skip: "بدون بکاپ در حال خروج..."
+exit_backup_invalid: "ورودی نامعتبر. بدون بکاپ خارج می‌شوم."

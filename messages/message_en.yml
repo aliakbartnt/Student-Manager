@@ -1,9 +1,14 @@
-# English messages
+# English messages 
 welcome: "Welcome to the Student Grade Management System."
 id_mode_prompt: "Do you want to enter IDs manually or auto-generate? (m/a): "
 id_mode_manual: "✅ ID mode set to MANUAL entry."
 id_mode_auto: "✅ ID mode set to AUTO-GENERATE."
 id_mode_invalid: "❌ Invalid input. Please enter 'm' for manual or 'a' for auto."
+
+mode_prompt: "Do you want to manage data or just view summary? (m for manage, s for summary): "
+mode_manage: "✅ Entering management mode."
+mode_summary: "✅ Showing summary report."
+mode_invalid: "❌ Please enter 'm' or 's'."
 
 menu: |
   ===== MENU =====
@@ -127,3 +132,33 @@ delete_all_prompt: "❌ Are you sure you want to DELETE ALL data? This action ca
 delete_all_confirm: "⚠️ CONFIRM: Delete ALL students, courses, and grades? (y/n) (or 'exit' to cancel): "
 delete_all_success: "✅ All data has been deleted successfully."
 delete_all_cancelled: "❌ Delete all operation cancelled."
+
+# Summary Report
+summary_title: "========== SUMMARY REPORT =========="
+summary_students_count: "Total Students: {count}"
+summary_courses_count: "Total Courses: {count}"
+summary_student_header: "Student: {name} (ID: {id})"
+summary_student_grade_line: "  - {course}: {grade}"
+summary_student_avg: "  Average: {avg:.2f}"
+summary_student_no_grades: "  (No grades recorded)"
+summary_course_detail: "Course: {name} (ID: {id}) - Students with grades: {count}"
+summary_no_data: "No data available."
+summary_end: "====================================="
+# Version Check
+version_mismatch_warning: "⚠️ VERSION MISMATCH DETECTED!"
+version_mismatch_detail: "File version: {file_ver}\nApp version: {app_ver}\n\nThis may cause compatibility issues with your data."
+version_mismatch_confirm: "Do you want to continue anyway? (y/n): "
+version_mismatch_continue: "Continuing with caution. Please backup your data."
+version_mismatch_abort: "Operation aborted by user."
+version_mismatch_invalid: "Invalid input. Please enter 'y' or 'n'."
+
+# Backup
+backup_no_data: "ℹ️ No data file found to backup."
+backup_success: "✅ Backup created successfully: {path}"
+backup_error: "❌ Error creating backup: {error}"
+
+# Exit Backup
+exit_backup_prompt: "Do you want to create a backup before exiting? (y/n): "
+exit_backup_creating: "Creating backup..."
+exit_backup_skip: "Skipping backup. Exiting..."
+exit_backup_invalid: "Invalid input. Exiting without backup."
